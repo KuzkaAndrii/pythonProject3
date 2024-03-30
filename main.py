@@ -3,8 +3,8 @@ from copy import copy
 class Rational:
     def __init__(self, n, d=None):
         if isinstance(n, Rational):
-            self._n=copy(n._n)
-            self._d=copy(n._d)
+            self._n = copy(n._n)
+            self._d = copy(n._d)
         else:
             try:
                 if type(n) is str:
@@ -26,61 +26,79 @@ class Rational:
     def __str__(self):
         return f"{self._n}/{self._d}"
     def __call__(self):
-        return self._n/self._d
+        return self._n / self._d
     def __getitem__(self, item):
-        if item=="n":
+        if item == "n":
             return self._n
-        elif item=="d":
+        elif item == "d":
             return self._d
         else:
-            assert 0==1, "Incorrect item"
+            assert 0 == 1, "Incorrect item"
     def __setitem__(self, item, val):
         assert type(val) is int
-        if item=="n":
-            self._n=copy(val)
-        elif item=="d":
-            self._d=copy(val)
+        if item == "n":
+            self._n = copy(val)
+        elif item == "d":
+            self._d = copy(val)
         else:
-            assert 0==1, "Incorrect item"
+            assert 0 == 1, "Incorrect item"
     def __add__(self, other):
         if type(other) is int:
-            self + Rational(other, 1)
+            return self + Rational(other, 1)
         else:
-            w = Rational(self['n']*other['d']+other['n']*self['d'], self['d']*other['d'])
+            w = Rational(self['n'] * other['d'] + other['n'] * self['d'], self['d'] * other['d'])
             return w
     def __radd__(self, other):
         return self + other
     def __sub__(self, other):
         if type(other) is int:
-            self + Rational(other, 1)
+            return self + Rational(other, 1)
         else:
-            w = Rational(self['n']*other['d']-other['n']*self['d'], self['d']*other['d'])
+            w = Rational(self['n'] * other['d'] - other['n'] * self['d'], self['d'] * other['d'])
             return w
     def __rsub__(self, other):
         return self - other
     def __mul__(self, other):
         if type(other) is int:
-            self + Rational(other, 1)
+            return self * Rational(other, 1)
         else:
-            w = Rational(self['n']*other['n'], self['d']*other['d'])
+            w = Rational(self['n'] * other['n'], self['d'] * other['d'])
             return w
     def __rmul__(self, other):
-        return self*other
-if __name__=="__main__":
-    f=open("input01.txt", "rt")
+        return self * other
+if __name__ == "__main__":
+    f = open("input01.txt", "rt")
     for line in f.readlines():
-        line=line.strip()
-        ls=line.split(' ')
+        line = line.strip()
+        ls = line.split(' ')
+        ls=ls[0::2]
+        nls = []
+        #print(ls)
         for t in range(len(ls)):
-            if ls[t]=='*':
-                if '/' in ls[t-1]:
-                    a=Rational(ls[t-1])
-                else:
-                    a=int(ls[t-1])
-                if '/' in ls[t+1]:
-                    b=Rational(ls[t+1])
-                else:
-                    b=int(ls[t+1])
-                    # виправ код щоб усе спочатку перевів а потім виконував операції
-                t[i-1:i+2]=a*b
+            if '/' in ls[t]:
+                ls[t] = Rational(ls[t])
+            elif ls[t] in '+*-':
+                continue
+            else:
+                ls[t] = int(ls[t])
+        for t in range(len(ls)):
+            if ls[t] == '*':
+                ls[t] = nls[-1] * ls[t + 1]
+                ls[t - 1] = 'q'
+                ls[t + 1] = 'q'
+                nls[-1] = ls[t]
+            elif ls[t] == 'q':
+                continue
+            else:
+                nls.append(ls[t])
+        res=nls[0]
+        for t in range(1, len(nls)-1, 2):
+            if nls[t]=='+':
+                res=res+nls[t+1]
+            elif nls[t]=='-':
+                res=res-nls[t+1]
+            else:
+                continue
+        print(res)
     f.close()
+    #Ви маєте відповіді щоб я звірився?
