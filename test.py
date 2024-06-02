@@ -19,7 +19,6 @@ if __name__=="__main__":
 
     #print(w, w - 72 + 30 + 42)
     #print(w - 72 + 30 + 42 + q)
-    q=Rational(41, 50)
-    w=Rational(-3, 3)
-    e=q-72+30+42+66*Rational(66, 88)*24
-    print(e)
+    q=Rational(1,4)
+    w=2
+    print(q/2)

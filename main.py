@@ -71,6 +71,13 @@ class Rational:
             return w
     def __rmul__(self, other):
         return self * other
+    def __truediv__(self, other):
+        if type(other) is int:
+            return self / Rational(other, 1)
+        else:
+            return Rational(self['n']*other['d'], other['n']*self['d'])
+    def __rtruediv__(self, other):
+        return self / other
 if __name__ == "__main__":
     f = open("input01.txt", "rt")
     for line in f.readlines():
